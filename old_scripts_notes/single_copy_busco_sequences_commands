@@ -1,0 +1,42 @@
+# These are the commands I used to generate the single_copy_busco_sequences output
+
+## WORKS -> Generate list of complete buscos to extract
+
+tail -n +6 full_table_thaEle.tsv |awk '$2 == "Complete" {print $0}' full_table_thaEle.tsv | awk '{print($3)}' > extract_ids.txt
+
+## Works-> Extract sequences of buscos 
+
+conda activate bioawkEnv
+
+bioawk -cfastx 'BEGIN{while((getline k <"extract_ids.txt")>0)i[k]=1}{if(i[$name])print ">"$name"\n"$seq}' /projects/tollis_lab/pns53_squamates/trans/thaEle.tran.rna > extracted_busco_sequences.fna
+
+# WORKS -> only lists complete genes
+awk '$2 == "Complete" {print $0}' full_table_thaEle.tsv > thaEle_table_only_complete_genes.txt
+
+## WORKS -> creates key value table of busco id and gene id
+awk '{print $3"\t"$1}' thaEle_table_only_complete_genes.txt > gene_busco.kv.txt
+
+## WORKS -> Replaces gene id with busco id (if there is a match)
+awk -f /scratch/mib75/squamates/scripts/key_renamer.awk gene_busco.kv.txt extracted_busco_sequences.fna > renamed_extracted_busco_sequences.fna
+
+## WORKS -> Split multi-fasta into individual files
+
+while read line
+do
+    if [[ ${line:0:1} == '>' ]]
+    then
+        outfile=${line#>}.fna
+        echo $line > $outfile
+    else
+        echo $line >> $outfile
+    fi
+done < renamed_extracted_busco_sequences.fna
+
+# WORKS -> Move all new files into single_copy_busco_sequences directory
+
+mkdir single_copy_busco_sequences
+mv EO* single_copy_busco_sequences/ 
+
+## At this point we will have .fasta files for every complete BUSCO. 
+## NOTE: BUSCO runs w/ genome mode will have entries in single_copy_busco_sequence for fragmented or incomplete genes. 
+## Since we are going to filter those out at a later stage, I went ahead and filtered for complete BUSCOS at this stage. 
