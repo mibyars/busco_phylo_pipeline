@@ -3,14 +3,14 @@
 ### Run this in the parent directory of your individual busco runs
 
 ## Get list of complete BUSCO's for each species & prep list of busco genes to extract
-for file in /projects/tollis_lab/squamate_phylogenetics/data/NEW_busco_output/*/*run_*/full_table*.tsv; do grep -v "^#" ${file} | awk '$2=="Complete" {print $1}' >> /projects/tollis_lab/squamate_phylogenetics/data/NEW_busco_output/complete_busco_ids.txt; done
+for file in */*run_*/full_table*.tsv; do grep -v "^#" ${file} | awk '$2=="Complete" {print $1}' >> complete_busco_ids.txt; done
 sort complete_busco_ids.txt | uniq -c > complete_busco_ids_with_counts
 awk '$NF > 2 {print $2}' complete_busco_ids_with_counts > final_busco_ids
 
 ## Copy single_copy_busco_sequences into a new directory and append the appropriate genSpe abbreviation to each file
 
-#mkdir busco_nt
-#mkdir busco_nt_merged
+mkdir busco_nt
+mkdir busco_nt_merged
 for dir in $(find -type d -name "single_copy_busco_sequences"); do  genSpe=$(dirname $dir | cut -c 3-8);  for file in ${dir}/*.fna; do cp ${file} ./busco_nt/${genSpe}_$(basename ${file}); sed -i 's/^>/>'${genSpe}'|/g' ./busco_nt/${genSpe}_$(basename ${file}); done; done
 
 ## Merge the BUSCO nucleotide fasta sequences together - (each file will have the same BUSCO sequence from different species) 

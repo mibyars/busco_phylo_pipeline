@@ -20,6 +20,14 @@ ASTRAL: https://github.com/smirarab/ASTRAL
 
 ## 0. Run BUSCO
 
+### Example Job Array goes here ###
+
+### Run BUSCO summary chart generator
+
+find -name '*short_summary.specific*' -exec cp {} ./BUSCO_summaries \;
+
+generate_plot.py -wd /data/BUSCO_summaries/
+
 ## 1. Extract single copy busco's for transcriptome runs as nucleotide fastas
 
 use the transcriptome converter bash script
