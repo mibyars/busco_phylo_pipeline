@@ -1,4 +1,5 @@
 Michael Byars (michael.byars@nau.edu)
+Simone Gable (smg655@nau.edu)
 Tollis Lab
 
 Based off of: https://bioinformaticsworkbook.org/dataAnalysis/phylogenetics/reconstructing-species-phylogenetic-tree-with-busco-genes-using-maximum-liklihood-method.html#gsc.tab=0
