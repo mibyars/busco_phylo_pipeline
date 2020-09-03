@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Run this in the parent directory of your individual busco runs
+
 ## Get list of complete BUSCO's for each species & prep list of busco genes to extract
 for file in /projects/tollis_lab/squamate_phylogenetics/data/NEW_busco_output/*/*run_*/full_table*.tsv; do grep -v "^#" ${file} | awk '$2=="Complete" {print $1}' >> /projects/tollis_lab/squamate_phylogenetics/data/NEW_busco_output/complete_busco_ids.txt; done
 sort complete_busco_ids.txt | uniq -c > complete_busco_ids_with_counts

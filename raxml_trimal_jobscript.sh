@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=raxmlTRM
-#SBATCH --output=/projects/tollis_lab/squamate_phylogenetics/data/FINAL_busco_output/busco_nt_merged/trimal_raxmlAll.out
+#SBATCH --job-name=raxmlAll
+#SBATCH --output=/projects/tollis_lab/squamate_phylogenetics/analysis/astral_pipeline/raxml_trimal/trimal_raxmlAll.out
 #SBATCH --mem=36000
 #SBATCH -c 32
 #SBATCH --time=3-00:00:00
@@ -10,7 +10,7 @@
 
 module load raxml parallel
 
-cd /projects/tollis_lab/squamate_phylogenetics/data/FINAL_busco_output/busco_nt_merged
+cd /projects/tollis_lab/squamate_phylogenetics/analysis/astral_pipeline/raxml_trimal
 
-srun parallel -j 32 --joblog nt_raxml_trimal_parallel_log < trimal_raxml_commands
+srun parallel -j 32 --joblog nt_raxml_parallel_log < trimal_raxml_commands
 

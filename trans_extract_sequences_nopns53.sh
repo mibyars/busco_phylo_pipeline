@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Use this script to extract single copy busco sequences from busco transcriptome-mode runs - these runs do not automatically generate the single_copy_busco_sequences directory
+
 # first positional argument is genSpe abbreviation
 # requires bioawk enabled 
 
