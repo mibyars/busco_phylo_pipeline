@@ -1,0 +1,4 @@
+cd /projects/tollis_lab/pns53_squamates/busco_output/busco
+ls -d */ | cut -c 1-6 > /scratch/mib75/buscodirs
+find . -type d -name 'single_copy_busco_sequences' | sort | cut -c 3-8 > /scratch/mib75/SeqFound
+comm /scratch/mib75/buscodirs /scratch/mib75/SeqFound -23 > /scratch/mib75/species_missing_single_copy_dir
