@@ -68,7 +68,7 @@ srun parallel -j 12 < commands
 
 for i in *mafft.out; do sed -i 's/|.*//' ${i}; done
 
-for i in *mafft.out; do echo 'trimal -in '${i}' -out '${i}'.trim -automated1' >> trimal_commands; done
+for i in *mafft.out; do echo 'trimal -in '${i}' -out ../trimal/'${i}'.trim -automated1' >> trimal_commands; done
 
 ## cliplkit trimmming, takes <30 min for ~4000 alignments w/ 12 cores
 for i in *mafft.out; do echo 'clipkit '${i} >> clipkit_commands; done
