@@ -10,7 +10,9 @@
 
 module load raxml parallel
 
-cd /projects/tollis_lab/squamate_phylogenetics/analysis/astral_pipeline/raxml_trimal
+cd /projects/tollis_lab/squamate_phylogenetics/analysis/astral_pipeline/trimal
+
+for i in *trim; do echo 'raxmlHPC -f a -m GTRGAMMA -# 100 -p 12345 -x 12345 -s '${i} ' -n '${i}'.raxml' >> trimal_raxml_commands; done
 
 srun parallel -j 32 --joblog nt_raxml_parallel_log < trimal_raxml_commands
 
