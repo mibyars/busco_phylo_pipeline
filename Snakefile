@@ -4,32 +4,59 @@ rule all:
 	input:
 		"results/astral/astral_species_tree.tre"
 
-rule mafft_allignment:
+rule prune_taxa:
 	input:
 		"data/busco_nt_merged/{busco_id}_nt.fasta"
 	output:
-		"results/mafft/{busco_id}.mafft.fa"
+		"{busco_id}_nt.fasta-out.fas"
+	conda:
+		"conda_yamls/amas.yml"
 	shell:
-		"module load mafft;"
-		"mafft --auto {input} > {output}" 
+		"AMAS.py remove -x xantus pinoys triJac agaPic sceOcc sauAte leiCar chaMad anoCri anoEqu -d dna -f fasta -i {input} -u fasta -g ''"
+
+rule move_buscos:
+	input:
+		"{busco_id}_nt.fasta-out.fas"
+	output:
+		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
+	shell:
+		"mv {input} results/busco_pruned/"
+
+rule clean_pruned_files:
+	input:
+		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
+	output:
+		"results/busco_pruned/{busco_id}_nt.fasta"
+	shell:
+		"rename -- -out.fas '' {input}"
+
+rule mafft_allignment:
+	input:
+		"results/busco_pruned/{busco_id}_nt.fasta"
+	output:
+		"results/mafft/{busco_id}.mafft.fa"
+	conda:
+		"conda_yamls/mafft.yml"
+	shell:
+		"mafft --auto {input} > {output}"
 
 rule clean_fasta_header:
-        input:
-              	"results/mafft/{busco_id}.mafft.fa"
-        output:
-               	"results/mafft/{busco_id}.cleaned"
-        shell:
-              	"sed 's/|.*//g' {input} > {output}"
+	input:
+		"results/mafft/{busco_id}.mafft.fa"
+	output:
+		"results/mafft/{busco_id}.cleaned"
+	shell:
+		"sed 's/|.*//g' {input} > {output}"
 
 rule trimal_trimming:
 	input:
 		"results/mafft/{busco_id}.cleaned"
-	output:	
+	output:
 		"results/trimal/{busco_id}.trim"
 	conda:
-		"/home/mib75/trimal.yaml"
+		"conda_yamls/trimal.yml"
 	shell:
-		"trimal -in {input} -out {output} -automated1"		
+		"trimal -in {input} -out {output} -automated1"
 
 rule raxml_gene_trees:
 	input:
