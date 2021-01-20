@@ -85,6 +85,6 @@ rule astral_species_tree:
 		"results/test_run"
 	shell:
 		"module load java;"
-		"cat {input} >> results/astral/astral_input.tre;"
+		"cat {input} >> results/astral/astral_input.tre"
 		"java -jar /projects/tollis_lab/squamate_phylogenetics/tools/ASTRAL/astral.5.6.3.jar -i results/astral/astral_input.tre -o {output}"
 		"touch results/test_run"
