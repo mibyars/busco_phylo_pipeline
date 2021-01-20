@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in line 4 of /home/michael/scratch/busco_phylo_pipeline/Snakefile:
+Missing input files for rule all:
+results/astral/astral_species_tree.tre
+results/test_run
