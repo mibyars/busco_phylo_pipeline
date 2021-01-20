@@ -1,7 +1,5 @@
 BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
-# Test Edit on local machine
-
-rule derp
+# OK now pushing from monsoon
 
 rule all:
 	input:
