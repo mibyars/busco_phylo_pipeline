@@ -3,8 +3,8 @@ BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
 
 rule all:
 	input:
-		"results/astral/astral_species_tree.tre",
-		"results/test_run"
+		"results/astral/astral_species_tree.tre"
+#		"results/test_run"
 rule prune_taxa:
 	input:
 		"data/busco_nt_merged/{busco_id}_nt.fasta"
@@ -81,8 +81,8 @@ rule astral_species_tree:
 	input:
 		expand("results/raxml/RAxML_bestTree.{busco_id}", busco_id=BUSCO_IDs)
 	output:
-		"results/astral/astral_species_tree.tre",
-		"results/test_run"
+		"results/astral/astral_species_tree.tre"
+#		"results/test_run"
 	shell:
 		"module load java"
 		"cat {input} >> results/astral/astral_input.tre"
