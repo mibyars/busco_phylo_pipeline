@@ -4,7 +4,7 @@ BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
 rule all:
 	input:
 		"results/astral/astral_species_tree.tre"
-
+		"results/test_run"
 rule prune_taxa:
 	input:
 		"data/busco_nt_merged/{busco_id}_nt.fasta"
@@ -86,3 +86,4 @@ rule astral_species_tree:
 		"module load java;"
 		"cat {input} >> results/astral/astral_input.tre;"
 		"java -jar /projects/tollis_lab/squamate_phylogenetics/tools/ASTRAL/astral.5.6.3.jar -i results/astral/astral_input.tre -o {output}"
+		"touch results/test_run"
