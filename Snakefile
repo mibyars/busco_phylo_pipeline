@@ -1,5 +1,5 @@
 BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
-
+# Test Edit on local machine
 rule all:
 	input:
 		"results/astral/astral_species_tree.tre"
@@ -67,6 +67,14 @@ rule raxml_gene_trees:
 		"module load raxml;"
 		"buscoID=$( echo {output} | sed 's/.*\.//');"
 		"raxmlHPC -f a -m GTRGAMMA -# 100 -p 12345 -x 12345 -s {input} -w ${{PWD}}/results/raxml -n $buscoID"
+
+# rule subset_by_length
+
+# rule subset_by_taxa_number
+
+# rule iq_tree_concordance_factors
+
+# rule iq_tree_concat_alignment
 
 rule astral_species_tree:
 	input:
