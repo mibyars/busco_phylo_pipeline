@@ -1,5 +1,8 @@
 BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
 # Test Edit on local machine
+
+rule derp
+
 rule all:
 	input:
 		"results/astral/astral_species_tree.tre"
