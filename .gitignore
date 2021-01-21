@@ -4,3 +4,5 @@ results/
 data/
 logs/
 .snakemake
+*dimg
+*simg

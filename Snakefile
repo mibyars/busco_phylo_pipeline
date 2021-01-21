@@ -93,16 +93,30 @@ rule gene_concordance_factors:
 		"results/iq_tree/concord.cf.tree.nex",
 		"results/iq_tree/concord.cf.stat_loci",
 		"results/iq_tree/concord.cf.stat_tree",
-		"results/iq_tree/concord.cf.tree",
+		"results/iq_tree/concord.cf.tree"
 
 	conda:
 		"conda_yamls/iqtree.yml"
 	shell:
 		'''
-		iqtree -t {input.species_tree} --gcf {input.concat_gene_trees} -p {input.alignment_dir} --scf 100 -pre results/iq_tree/concord -T 6
+		iqtree -t {input.species_tree} --gcf {input.concat_gene_trees} -p {input.alignment_dir} --scf 100 -pre results/iq_tree/concord -T 6 --df-tree --cf-verbose
 		'''
 
-# Unused paramaters of tqtree concordance factors: --df-tree --cf-verbose
+Rule summary_plots:
+	Input:
+		
+
+# DiscoVista: https://github.com/esayyari/DiscoVista
+#singularity pull docker://esayyari/discovista
+#
+# rule DiscoVista:
+# 	input:
+#
+# 	output:
+#
+# 	container:
+#
+
 
 # rule subset_by_taxa_number
 
