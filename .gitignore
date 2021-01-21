@@ -3,4 +3,4 @@ tmp/
 results/
 data/
 logs/
-tools/
+.snakemake

@@ -9,4 +9,4 @@ dependencies:
   - libgcc-ng=9.2.0=h24d8f2e_2
   - libgomp=9.2.0=h24d8f2e_2
   - raxml=8.2.12=h14c3975_1
-prefix: /home/michael/anaconda3/envs/raxml
+

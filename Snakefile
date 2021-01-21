@@ -3,7 +3,10 @@ BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
 
 rule all:
 	input:
-		"results/astral/astral_species_tree.tre"
+		"results/astral/astral_species_tree.tre",
+		"results/iq_tree/concord.cf.tree.nex"
+
+
 rule prune_taxa:
 	input:
 		"data/busco_nt_merged/{busco_id}_nt.fasta"
@@ -63,26 +66,46 @@ rule raxml_gene_trees:
 		"results/trimal/{busco_id}.trim"
 	output:
 		"results/raxml/RAxML_bestTree.{busco_id}"
+	conda:
+		"conda_yamls/raxml.yml"
 	shell:
-		"module load raxml;"
-		"buscoID=$( echo {output} | sed 's/.*\.//');"
-		"raxmlHPC -f a -m GTRGAMMA -# 100 -p 12345 -x 12345 -s {input} -w ${{PWD}}/results/raxml -n $buscoID"
+		"raxmlHPC -f a -m GTRGAMMA -# 100 -p 12345 -x 12345 -s {input} -w ${{PWD}}/results/raxml -n {wildcards.busco_id}"
 
-# rule subset_by_length
+rule astral_species_tree:
+	input:
+		expand("results/raxml/RAxML_bestTree.{busco_id}", busco_id=BUSCO_IDs)
+	output:
+		species_tree = "results/astral/astral_species_tree.tre",
+		concat_gene_trees = "results/astral/astral_input.tre"
+	log:
+		"logs/astral.log"
+	shell:
+		'''
+		cat results/raxml/RAxML_bestTree.* >> results/astral/astral_input.tre
+		java -jar tools/Astral/astral.5.7.5.jar -i results/astral/astral_input.tre -o {output.species_tree}
+		'''
+rule gene_concordance_factors:
+	input:
+		species_tree = "results/astral/astral_species_tree.tre",
+		concat_gene_trees = "results/astral/astral_input.tre",
+		alignment_dir = "results/trimal/"
+	output:
+		"results/iq_tree/concord.cf.tree.nex",
+		"results/iq_tree/concord.cf.stat_loci",
+		"results/iq_tree/concord.cf.stat_tree",
+		"results/iq_tree/concord.cf.tree",
+
+	conda:
+		"conda_yamls/iqtree.yml"
+	shell:
+		'''
+		iqtree -t {input.species_tree} --gcf {input.concat_gene_trees} -p {input.alignment_dir} --scf 100 -pre results/iq_tree/concord -T 6
+		'''
+
+# Unused paramaters of tqtree concordance factors: --df-tree --cf-verbose
 
 # rule subset_by_taxa_number
 
 # rule iq_tree_concordance_factors
 
 # rule iq_tree_concat_alignment
-
-rule astral_species_tree:
-	input:
-		expand("results/raxml/RAxML_bestTree.{busco_id}", busco_id=BUSCO_IDs)
-	output:
-		"results/astral/astral_species_tree.tre"
-	shell:
-		"module load java"
-		"cat {input} >> results/astral/astral_input.tre"
-		"java -jar /projects/tollis_lab/squamate_phylogenetics/tools/ASTRAL/astral.5.6.3.jar -i results/astral/astral_input.tre -o {output}"
-		"touch results/test_run"
