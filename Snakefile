@@ -6,36 +6,36 @@ rule all:
 		"results/astral/astral_species_tree.tre",
 		"results/iq_tree/concord.cf.tree.nex"
 
-
-rule prune_taxa:
-	input:
-		"data/busco_nt_merged/{busco_id}_nt.fasta"
-	output:
-		"{busco_id}_nt.fasta-out.fas"
-	conda:
-		"conda_yamls/amas.yml"
-	shell:
-		"AMAS.py remove -x xantus pinoys triJac agaPic sceOcc sauAte leiCar chaMad anoCri anoEqu -d dna -f fasta -i {input} -u fasta -g ''"
-
-rule move_buscos:
-	input:
-		"{busco_id}_nt.fasta-out.fas"
-	output:
-		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
-	shell:
-		"mv {input} results/busco_pruned/"
-
-rule clean_pruned_files:
-	input:
-		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
-	output:
-		"results/busco_pruned/{busco_id}_nt.fasta"
-	shell:
-		"rename -- -out.fas '' {input}"
+#
+# rule prune_taxa:
+# 	input:
+# 		"data/busco_nt_merged/{busco_id}_nt.fasta"
+# 	output:
+# 		"{busco_id}_nt.fasta-out.fas"
+# 	conda:
+# 		"conda_yamls/amas.yml"
+# 	shell:
+# 		"AMAS.py remove -x xantus pinoys triJac agaPic sceOcc sauAte leiCar chaMad anoCri anoEqu -d dna -f fasta -i {input} -u fasta -g ''"
+#
+# rule move_buscos:
+# 	input:
+# 		"{busco_id}_nt.fasta-out.fas"
+# 	output:
+# 		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
+# 	shell:
+# 		"mv {input} results/busco_pruned/"
+#
+# rule clean_pruned_files:
+# 	input:
+# 		"results/busco_pruned/{busco_id}_nt.fasta-out.fas"
+# 	output:
+# 		"results/busco_pruned/{busco_id}_nt.fasta"
+# 	shell:
+# 		"rename -- -out.fas '' {input}"
 
 rule mafft_allignment:
 	input:
-		"results/busco_pruned/{busco_id}_nt.fasta"
+		"data/busco_nt_merged/{busco_id}_nt.fasta"
 	output:
 		"results/mafft/{busco_id}.mafft.fa"
 	conda:
@@ -104,7 +104,7 @@ rule gene_concordance_factors:
 
 Rule summary_plots:
 	Input:
-		
+
 
 # DiscoVista: https://github.com/esayyari/DiscoVista
 #singularity pull docker://esayyari/discovista
