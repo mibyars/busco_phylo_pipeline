@@ -4,7 +4,7 @@ BUSCO_IDs, = glob_wildcards("data/busco_nt_merged/{busco_id}_nt.fasta")
 rule all:
 	input:
 		"results/astral/astral_species_tree.tre",
-		"results/iq_tree/concord.cf.tree.nex",
+		"results/iq_tree_gcf/concord.cf.tree.nex",
 		"results/amas/trimmed_alignment_summary.txt",
 		"results/amas/raw_alignment_summary.txt"
 #
@@ -34,7 +34,7 @@ rule all:
 # 	shell:
 # 		"rename -- -out.fas '' {input}"
 
-# MAFFT -> Create an alignment for every BUSCO
+#MAFFT -> Create an alignment for every BUSCO
 rule mafft_allignment:
 	input:
 		"data/busco_nt_merged/{busco_id}_nt.fasta"
@@ -77,8 +77,8 @@ rule amas_summaries:
 		"conda_yamls/amas.yml"
 	shell:
 		'''
-		AMAS.py -c 2 -f fasta -d dna -i {input.trimmed_alignments} -o {output.trimmed_alignment_summary}
-		AMAS.py -c 2 -f fasta -d dna -i {input.raw_alignments} -o {output.raw_alignment_summary}
+		AMAS.py summary -c 2 -f fasta -d dna -i results/trimal/*trim -o {output.trimmed_alignment_summary}
+		AMAS.py summary -c 2 -f fasta -d dna -i results/mafft/*cleaned -o {output.raw_alignment_summary}
 		'''
 
 # Create Gene Trees for every trimmed alignment using RAxML
@@ -111,21 +111,25 @@ rule astral_species_tree:
 rule gene_concordance_factors:
 	input:
 		species_tree = "results/astral/astral_species_tree.tre",
-		concat_gene_trees = "results/astral/astral_input.tre",
-		alignment_dir = "results/trimal/"
+		concat_gene_trees = "results/astral/astral_input.tre"
+		# alignment_dir = "results/trimal/"
 	output:
-		"results/iq_tree/concord.cf.tree.nex",
-		"results/iq_tree/concord.cf.stat_loci",
-		"results/iq_tree/concord.cf.stat_tree",
-		"results/iq_tree/concord.cf.tree"
+		"results/iq_tree_gcf/concord.cf.tree.nex",
+		"results/iq_tree_gcf/concord.cf.stat_loci",
+		"results/iq_tree_gcf/concord.cf.stat_tree",
+		"results/iq_tree_gcf/concord.cf.tree"
 
 	conda:
 		"conda_yamls/iqtree.yml"
 	shell:
 		'''
-		iqtree -t {input.species_tree} --gcf {input.concat_gene_trees} -p {input.alignment_dir} --scf 100 -pre results/iq_tree/concord -T 6 --df-tree --cf-verbose
+		iqtree -t {input.species_tree} --gcf {input.concat_gene_trees} -p results/trimal/ --scf 100 -pre results/iq_tree_gcf/concord -T 6 --df-tree --cf-verbose
 		'''
-#
+
+###############################
+# THE GRAVEYARD FOR DEAD CODE #
+###############################
+
 # Rule summary_plots:
 # 	Input:
 #
@@ -144,6 +148,6 @@ rule gene_concordance_factors:
 
 # rule subset_by_taxa_number
 
-# rule iq_tree_concordance_factors
+# rule iq_tree_gcf_concordance_factors
 
-# rule iq_tree_concat_alignment
+# rule iq_tree_gcf_concat_alignment
