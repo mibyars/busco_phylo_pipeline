@@ -4,11 +4,6 @@ Tollis Lab
 
 Based off of: https://bioinformaticsworkbook.org/dataAnalysis/phylogenetics/reconstructing-species-phylogenetic-tree-with-busco-genes-using-maximum-liklihood-method.html#gsc.tab=0
 
-# Contents:
-
-Driver Scripts
-Individual bash scripts
-
 # Software Dependencies
 
 BUSCO (version 3.0, not compatible with version 4.0+)
@@ -45,4 +40,3 @@ trimal.yml
 ```
 snakemake --cores 4 --use-conda --keep-going
 ```
-
